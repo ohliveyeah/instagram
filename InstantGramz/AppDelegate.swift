@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Parse
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -15,8 +16,54 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
+        let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        
+//        let homeNavigationController = mainStoryboard.instantiateViewControllerWithIdentifier("InstaNavigationController") as! UINavigationController
+//        let homeViewController = homeNavigationController.topViewController
+//        
+//
+        Parse.initializeWithConfiguration(
+            ParseClientConfiguration(block: { (configuration:ParseMutableClientConfiguration) -> Void in
+                configuration.applicationId = "instantgramz"
+                configuration.clientKey = "adfsiho;fhawe;eiohfw"  // set to nil assuming you have not set clientKey
+                configuration.server = "https://quiet-island-66437.herokuapp.com/parse"
+            })
+        )
+        
+        
+//        // check if user is logged in.
+        if PFUser.currentUser() != nil {
+            // if there is a logged in user then load the home view controller
+
+           let homeViewController: HomeViewController = mainStoryboard.instantiateViewControllerWithIdentifier("HomeViewController") as! HomeViewController
+            
+            self.window?.rootViewController = homeViewController
+     
+            let tabBarController: UITabBarController = mainStoryboard.instantiateViewControllerWithIdentifier("InstaTabBarController") as! UITabBarController
+            self.window?.rootViewController = tabBarController
+           
+            self.window?.makeKeyAndVisible()
+            
+            print("user logged in")
+        }
+        
+        else {
+            // if there is not a logged in user then load the login view controller
+            self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
+            let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+            let loginViewController: LoginViewController = mainStoryboard.instantiateViewControllerWithIdentifier("LoginViewController") as! LoginViewController
+            
+            self.window?.rootViewController = loginViewController
+            
+            self.window?.makeKeyAndVisible()
+            
+            print("user not logged in")
+        }
+        
         return true
+        // Override point for customization after application launch.
     }
 
     func applicationWillResignActive(application: UIApplication) {
