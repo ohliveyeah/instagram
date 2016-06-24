@@ -15,6 +15,9 @@ class OtherProfileViewController: UIViewController, UICollectionViewDataSource, 
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var userLabel: UILabel!
     @IBOutlet weak var profilePicture: PFImageView!
+    @IBOutlet weak var postsLabel: UILabel!
+    @IBOutlet weak var bioLabel: UILabel!
+    
     
     var user: PFObject?
     var isMoreDataLoading = false
@@ -26,7 +29,6 @@ class OtherProfileViewController: UIViewController, UICollectionViewDataSource, 
         //let currentUser = PFUser.currentUser()!.username
         currentUser = (user as? PFUser)!
         let currentUsername = currentUser!.username
-        print(currentUser)
         userLabel.text = "\(currentUsername!)'s Gramz"
         
         collectionView.dataSource = self
@@ -53,6 +55,7 @@ class OtherProfileViewController: UIViewController, UICollectionViewDataSource, 
         query.findObjectsInBackgroundWithBlock { (posts: [PFObject]?, error: NSError?) -> Void in
             if let posts = posts {
                 self.userPosts = posts
+                self.postsLabel.text = "\(self.userPosts.count) Posts"
                 self.collectionView.reloadData()
             } else {
                 print(error?.localizedDescription)
@@ -69,6 +72,12 @@ class OtherProfileViewController: UIViewController, UICollectionViewDataSource, 
         }
         instagramPost = currentUser
         
+        let bio = currentUser!["bio"]
+        if let bio = bio {
+            bioLabel.text = (bio as! String)
+        } else {
+            bioLabel.text = ""
+        }
     }
     
     
@@ -118,44 +127,6 @@ class OtherProfileViewController: UIViewController, UICollectionViewDataSource, 
     @IBAction func didTapDone(sender: AnyObject) {
         self.dismissViewControllerAnimated(true, completion: nil)
     }
-    
-    
-//    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-//        if (segue.identifier == "profilePostDetailsSegue") {
-//            var indexPath: NSIndexPath
-//            let vc = segue.destinationViewController as! PostDetailsViewController
-//            indexPath = collectionView.indexPathForCell(sender as! UICollectionViewCell)!
-//            
-//            let dateFormatter = NSDateFormatter()
-//            dateFormatter.locale = NSLocale.currentLocale()
-//            
-//            let post = userPosts[indexPath.row]
-//            //print(post)
-//            vc.currentPost = post
-//            let caption = post["caption"]
-//            vc.captionText = caption as! String
-//            let likesCount = post["likesCount"]
-//            vc.likesText = likesCount.stringValue
-//            let user = post["author"] as! PFUser
-//            print (user)
-//            //print (user.username)
-//            //let username: String? = user.username
-//            //print(username)
-//            //            let username = PFUser.currentUser()!.username
-//            //            print(username)
-//            //            print(username!)
-//            //            var username1 = username!
-//            //vc.userLabel.text = username1
-//            let timestamp = post.createdAt
-//            dateFormatter.dateStyle = NSDateFormatterStyle.FullStyle
-//            let convertedDate = dateFormatter.stringFromDate(timestamp!)
-//            vc.timestampText = "Posted:\(convertedDate)"
-//            
-//            let oldImage = post["media"] as? PFFile
-//            vc.image = oldImage
-//        }
-//    }
-    
 }
 
 

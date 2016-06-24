@@ -42,8 +42,14 @@ class Post: NSObject {
         post.saveInBackgroundWithBlock(completion)
     }
     
+    /**
+     Method to add a comment to Parse
+     
+     - parameter post: Post that the comment is attached to
+     - parameter comment: Comment text input by the user
+     */
+    
     class func postComment(comment: String?, forPost post: PFObject) {
-        //let currentPost: Post = Post.init()
         let oldCommentsCount = post["commentsCount"]
         var newCommentsCount = (oldCommentsCount as? Int)
         newCommentsCount! += 1
@@ -57,9 +63,7 @@ class Post: NSObject {
         currentComment["parent"] = post
         
         currentComment.saveInBackgroundWithBlock { (success: Bool, error: NSError?) in
-            if success {
-                print("Right on Right on!!!")
-            } else {
+            if !(success) {
                 print(error?.localizedDescription)
             }
         }

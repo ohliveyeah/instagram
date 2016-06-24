@@ -15,7 +15,8 @@ class ProfileViewController: UIViewController, UICollectionViewDataSource, UICol
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var userLabel: UILabel!
     @IBOutlet weak var profilePicture: PFImageView!
-    
+    @IBOutlet weak var bioLabel: UILabel!
+    @IBOutlet weak var postsLabel: UILabel!
     
     var isMoreDataLoading = false
     var userPosts: [PFObject] = []
@@ -23,20 +24,21 @@ class ProfileViewController: UIViewController, UICollectionViewDataSource, UICol
     override func viewDidLoad() {
         super.viewDidLoad()
         let currentUser = PFUser.currentUser()!.username
-        print(currentUser)
         userLabel.text = "\(currentUser!)'s Gramz"
+        var bio = PFUser.currentUser()!["bio"]
+        if let bio = bio {
+            bioLabel.text = (bio as! String)
+        } else {
+            bioLabel.text = ""
+        }
         
         collectionView.dataSource = self
         collectionView.delegate = self
         //
         //        NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: #selector(ProfileViewController.onTimer), userInfo: nil, repeats: true)
         
-                self.profilePicture.layer.cornerRadius = 30
-                self.profilePicture.layer.masksToBounds = true
-        
-        //        self.profilePicture.clipsToBounds = true;
-        //        self.profilePicture.layer.borderWidth = 3.0;
-        //        self.profilePicture.layer.borderColor = UIColor.whiteColor().CGColor
+        self.profilePicture.layer.cornerRadius = 30
+        self.profilePicture.layer.masksToBounds = true
         
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refreshControlAction(_:)), forControlEvents: UIControlEvents.ValueChanged)
@@ -50,10 +52,32 @@ class ProfileViewController: UIViewController, UICollectionViewDataSource, UICol
         query.findObjectsInBackgroundWithBlock { (posts: [PFObject]?, error: NSError?) -> Void in
             if let posts = posts {
                 self.userPosts = posts
+                self.postsLabel.text = "\(self.userPosts.count) Posts"
                 self.collectionView.reloadData()
             } else {
                 print(error?.localizedDescription)
             }
+        }
+        
+        //postsLabel.text = "\(self.userPosts.count) Posts"
+        
+        let currentProfilePic = PFUser.currentUser()!["profilePicture"]
+        
+        var instagramPost: PFObject! {
+            didSet {
+                self.profilePicture.file = PFUser.currentUser()!["profilePicture"] as? PFFile
+                self.profilePicture.loadInBackground()
+            }
+        }
+        instagramPost = PFUser.currentUser()
+    }
+    
+    override func viewDidDisappear(animated: Bool) {
+        var bio = PFUser.currentUser()!["bio"]
+        if let bio = bio {
+            bioLabel.text = (bio as! String)
+        } else {
+            bioLabel.text = ""
         }
         
         let currentProfilePic = PFUser.currentUser()!["profilePicture"]
@@ -65,7 +89,6 @@ class ProfileViewController: UIViewController, UICollectionViewDataSource, UICol
             }
         }
         instagramPost = PFUser.currentUser()
-
     }
     
     
@@ -88,6 +111,16 @@ class ProfileViewController: UIViewController, UICollectionViewDataSource, UICol
             }
         }
         self.collectionView.reloadData()
+        
+        let currentProfilePic = PFUser.currentUser()!["profilePicture"]
+        
+        var instagramPost: PFObject! {
+            didSet {
+                self.profilePicture.file = PFUser.currentUser()!["profilePicture"] as? PFFile
+                self.profilePicture.loadInBackground()
+            }
+        }
+        instagramPost = PFUser.currentUser()
         
         // Tell the refreshControl to stop spinning
         refreshControl.endRefreshing()
@@ -112,6 +145,42 @@ class ProfileViewController: UIViewController, UICollectionViewDataSource, UICol
         
     }
     
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(true)
+        var bio = PFUser.currentUser()!["bio"]
+        if let bio = bio {
+            bioLabel.text = (bio as! String)
+        } else {
+            bioLabel.text = ""
+        }
+        
+        // construct query
+        let query = PFQuery(className: "Post")
+        query.whereKey("author", equalTo: PFUser.currentUser()!)
+        
+        // fetch data asynchronously
+        query.findObjectsInBackgroundWithBlock { (posts: [PFObject]?, error: NSError?) -> Void in
+            if let posts = posts {
+                self.userPosts = posts
+                self.collectionView.reloadData()
+            } else {
+                print(error?.localizedDescription)
+            }
+        }
+
+        let currentProfilePic = PFUser.currentUser()!["profilePicture"]
+        
+        var instagramPost: PFObject! {
+            didSet {
+                self.profilePicture.file = PFUser.currentUser()!["profilePicture"] as? PFFile
+                self.profilePicture.loadInBackground()
+            }
+        }
+        instagramPost = PFUser.currentUser()
+    }
+    
+    
+    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if (segue.identifier == "profilePostDetailsSegue") {
             var indexPath: NSIndexPath
@@ -122,22 +191,11 @@ class ProfileViewController: UIViewController, UICollectionViewDataSource, UICol
             dateFormatter.locale = NSLocale.currentLocale()
             
             let post = userPosts[indexPath.row]
-            //print(post)
             vc.currentPost = post
             let caption = post["caption"]
             vc.captionText = caption as! String
             let likesCount = post["likesCount"]
             vc.likesText = likesCount.stringValue
-            let user = post["author"] as! PFUser
-            print (user)
-            //print (user.username)
-            //let username: String? = user.username
-            //print(username)
-//            let username = PFUser.currentUser()!.username
-//            print(username)
-//            print(username!)
-//            var username1 = username!
-            //vc.userLabel.text = username1
             let timestamp = post.createdAt
             dateFormatter.dateStyle = NSDateFormatterStyle.FullStyle
             let convertedDate = dateFormatter.stringFromDate(timestamp!)
@@ -147,6 +205,7 @@ class ProfileViewController: UIViewController, UICollectionViewDataSource, UICol
             vc.image = oldImage
         }
     }
+    
     
 }
 

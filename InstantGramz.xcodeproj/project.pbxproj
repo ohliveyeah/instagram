@@ -13,6 +13,8 @@
 		7407B8341D1C41E6000AD74D /* CommentsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7407B8331D1C41E6000AD74D /* CommentsTableViewCell.swift */; };
 		7407B8361D1C7D99000AD74D /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7407B8351D1C7D99000AD74D /* SettingsViewController.swift */; };
 		7407B8381D1D1202000AD74D /* OtherProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7407B8371D1D1202000AD74D /* OtherProfileViewController.swift */; };
+		7411ADEE1D1D8D9900C6BB39 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7411ADED1D1D8D9900C6BB39 /* SearchViewController.swift */; };
+		7411ADF01D1D9E2A00C6BB39 /* SearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7411ADEF1D1D9E2A00C6BB39 /* SearchTableViewCell.swift */; };
 		742501A41D1891E200891E63 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 742501A31D1891E200891E63 /* LoginViewController.swift */; };
 		74738C091D1AEECE00AF3B32 /* PostDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74738C081D1AEECE00AF3B32 /* PostDetailsViewController.swift */; };
 		74738C0B1D1B28BA00AF3B32 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74738C0A1D1B28BA00AF3B32 /* ProfileViewController.swift */; };
@@ -37,6 +39,8 @@
 		7407B8331D1C41E6000AD74D /* CommentsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentsTableViewCell.swift; sourceTree = "<group>"; };
 		7407B8351D1C7D99000AD74D /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		7407B8371D1D1202000AD74D /* OtherProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OtherProfileViewController.swift; sourceTree = "<group>"; };
+		7411ADED1D1D8D9900C6BB39 /* SearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
+		7411ADEF1D1D9E2A00C6BB39 /* SearchTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchTableViewCell.swift; sourceTree = "<group>"; };
 		742501A31D1891E200891E63 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		74738C081D1AEECE00AF3B32 /* PostDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostDetailsViewController.swift; sourceTree = "<group>"; };
 		74738C0A1D1B28BA00AF3B32 /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
@@ -84,6 +88,7 @@
 				74738C0C1D1B2C8B00AF3B32 /* ProfileCollectionViewCell.swift */,
 				74D50F311D19E505006F81AC /* Post.swift */,
 				7407B8301D1BBCB0000AD74D /* Comment.swift */,
+				7411ADEF1D1D9E2A00C6BB39 /* SearchTableViewCell.swift */,
 			);
 			name = Objects;
 			sourceTree = "<group>";
@@ -117,7 +122,6 @@
 				749CDC121D18866F000BF7F2 /* LaunchScreen.storyboard */,
 				749CDC151D18866F000BF7F2 /* Info.plist */,
 				740792391D1B9C9E00CEAEFD /* InfiniteScrollActivityView.swift */,
-				7407B8371D1D1202000AD74D /* OtherProfileViewController.swift */,
 			);
 			path = InstantGramz;
 			sourceTree = "<group>";
@@ -133,6 +137,8 @@
 				74738C081D1AEECE00AF3B32 /* PostDetailsViewController.swift */,
 				74738C0A1D1B28BA00AF3B32 /* ProfileViewController.swift */,
 				7407B8351D1C7D99000AD74D /* SettingsViewController.swift */,
+				7411ADED1D1D8D9900C6BB39 /* SearchViewController.swift */,
+				7407B8371D1D1202000AD74D /* OtherProfileViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -272,11 +278,13 @@
 				7407923A1D1B9C9E00CEAEFD /* InfiniteScrollActivityView.swift in Sources */,
 				742501A41D1891E200891E63 /* LoginViewController.swift in Sources */,
 				74D50F2F1D19E1BA006F81AC /* CaptionViewController.swift in Sources */,
+				7411ADEE1D1D8D9900C6BB39 /* SearchViewController.swift in Sources */,
 				74738C0B1D1B28BA00AF3B32 /* ProfileViewController.swift in Sources */,
 				74738C0D1D1B2C8B00AF3B32 /* ProfileCollectionViewCell.swift in Sources */,
 				749CDC0C1D18866F000BF7F2 /* ViewController.swift in Sources */,
 				74738C091D1AEECE00AF3B32 /* PostDetailsViewController.swift in Sources */,
 				74DFA1A61D19F7BC008E0ABE /* FeedPostTableViewCell.swift in Sources */,
+				7411ADF01D1D9E2A00C6BB39 /* SearchTableViewCell.swift in Sources */,
 				7407B8361D1C7D99000AD74D /* SettingsViewController.swift in Sources */,
 				7407B8311D1BBCB0000AD74D /* Comment.swift in Sources */,
 				7407B8381D1D1202000AD74D /* OtherProfileViewController.swift in Sources */,

@@ -45,6 +45,8 @@ class PostDetailsViewController: UIViewController,  UITableViewDataSource, UITab
         timestampLabel.text = timestampText
         commentField.hidden = true
         
+        NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: #selector(PostDetailsViewController.onTimer), userInfo: nil, repeats: true)
+        
         // construct PFQuery
         let query = PFQuery(className: "Comment")
         query.orderByAscending("createdAt")
@@ -80,23 +82,19 @@ class PostDetailsViewController: UIViewController,  UITableViewDataSource, UITab
     @IBAction func didTapComment(sender: AnyObject) {
         commentButtonCounter += 1
         if (commentButtonCounter % 2 == 1) {
-            print ("comment button pressed")
             commentField.hidden = false
         }
         else {
-            print ("post button pressed")
             Post.postComment(commentField.text, forPost: currentPost!)
             print ("Comment posted \(commentField.text!)")
             commentField.hidden = true
         }
-        commentsTableView.reloadData()
+        self.commentsTableView.reloadData()
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection
         section: Int) -> Int {
-        //print(comments.count)
         return comments.count
-        //return 1
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -110,7 +108,23 @@ class PostDetailsViewController: UIViewController,  UITableViewDataSource, UITab
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if (segue.identifier == "visitProfileSegue") {
             let vc = segue.destinationViewController as! OtherProfileViewController
-            vc.user = currentPost!["author"] as! PFObject
+            vc.user = (currentPost!["author"] as! PFObject)
+        }
+    }
+    
+    func onTimer() {
+        let query = PFQuery(className: "Comment")
+        query.orderByAscending("createdAt")
+        query.whereKey("parent", equalTo: currentPost!)
+        
+        query.findObjectsInBackgroundWithBlock { (comments: [PFObject]?, error: NSError?) -> Void in
+            if let comments = comments {
+                self.comments = comments
+                
+            } else {
+                print(error?.localizedDescription)
+            }
+            self.commentsTableView.reloadData()
         }
     }
 }

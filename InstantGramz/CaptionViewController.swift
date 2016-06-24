@@ -17,6 +17,7 @@ class CaptionViewController: UIViewController {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var captionField: UITextField!
     @IBOutlet weak var filterChoice: UISegmentedControl!
+    @IBOutlet weak var intensitySlider: UISlider!
     
     
     override func viewDidLoad() {
@@ -25,6 +26,27 @@ class CaptionViewController: UIViewController {
         imageView.image = image
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(CaptionViewController.dismissKeyboard))
         view.addGestureRecognizer(tap)
+        
+//        UIImage *aUIImage = showPickedImageView.image;
+//        CGImageRef aCGImage = aUIImage.CGImage;
+//        aCIImage = [CIImage imageWithCGImage:aCGImage];
+//        
+//        
+//        context = [[CIContext contextWithOptions:nil] retain];
+//        brightnessFilter = [[CIFilter filterWithName:@"CIColorControls" keysAndValues: @"inputImage", aCIImage, nil] retain];
+//        
+//    }
+//    
+//    -(IBAction)brightnessSliderValueChanged:(id)sender {
+//    
+//    [brightnessFilter setValue:[NSNumber numberWithFloat:brightnessSlider.value ] forKey: @"inputBrightness"];
+//    outputImage = [brightnessFilter outputImage];
+//    CGImageRef cgiig = [context createCGImage:outputImage fromRect:[outputImage extent]];
+//    newUIImage = [UIImage imageWithCGImage:cgiig];
+//    CGImageRelease(cgiig);
+//    [showPickedImageView setImage:newUIImage];
+//    
+//    }
         
     }
 

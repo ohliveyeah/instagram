@@ -13,6 +13,7 @@ import ParseUI
 class SettingsViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     @IBOutlet weak var profileImageView: PFImageView!
+    @IBOutlet weak var bioField: UITextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,6 +44,13 @@ class SettingsViewController: UIViewController, UIImagePickerControllerDelegate,
      self.presentViewController(vc, animated: true, completion: nil)
 
     }
+    
+    @IBAction func didTapChangeBio(sender: AnyObject) {
+        let user = PFUser.currentUser()
+        user!["bio"] = bioField.text
+        user!.saveInBackground()
+    }
+    
     
     func imagePickerController(picker: UIImagePickerController,
                                didFinishPickingMediaWithInfo info: [String : AnyObject]) {
