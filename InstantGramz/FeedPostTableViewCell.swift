@@ -13,14 +13,19 @@ import ParseUI
 class FeedPostTableViewCell: UITableViewCell {
 
     @IBOutlet weak var postImage: PFImageView!
-    @IBOutlet weak var userLabel: UILabel!
+   // @IBOutlet weak var userLabel: UILabel!
     @IBOutlet weak var likeLabel: UILabel!
     @IBOutlet weak var commentsLabel: UILabel!
     @IBOutlet weak var captionLabel: UILabel!
-   
+    @IBOutlet weak var profilePicture: PFImageView!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        
+        self.profilePicture.layer.cornerRadius = 20
+        self.profilePicture.layer.masksToBounds = true
+        self.profilePicture.layer.borderWidth = 3.0;
+        self.profilePicture.layer.borderColor = UIColor.whiteColor().CGColor
     }
 
     override func setSelected(selected: Bool, animated: Bool) {

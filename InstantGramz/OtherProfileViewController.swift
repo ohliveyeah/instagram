@@ -1,8 +1,8 @@
 //
-//  ProfileViewController.swift
+//  OtherProfileViewController.swift
 //  InstantGramz
 //
-//  Created by Olivia Gregory on 6/22/16.
+//  Created by Olivia Gregory on 6/24/16.
 //  Copyright © 2016 Olivia Gregory. All rights reserved.
 //
 
@@ -10,29 +10,32 @@ import UIKit
 import Parse
 import ParseUI
 
-class ProfileViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+class OtherProfileViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var userLabel: UILabel!
     @IBOutlet weak var profilePicture: PFImageView!
     
-    
+    var user: PFObject?
     var isMoreDataLoading = false
     var userPosts: [PFObject] = []
+    var currentUser: PFUser?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let currentUser = PFUser.currentUser()!.username
+        //let currentUser = PFUser.currentUser()!.username
+        currentUser = (user as? PFUser)!
+        let currentUsername = currentUser!.username
         print(currentUser)
-        userLabel.text = "\(currentUser!)'s Gramz"
+        userLabel.text = "\(currentUsername!)'s Gramz"
         
         collectionView.dataSource = self
         collectionView.delegate = self
         //
         //        NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: #selector(ProfileViewController.onTimer), userInfo: nil, repeats: true)
         
-                self.profilePicture.layer.cornerRadius = 30
-                self.profilePicture.layer.masksToBounds = true
+        self.profilePicture.layer.cornerRadius = 30
+        self.profilePicture.layer.masksToBounds = true
         
         //        self.profilePicture.clipsToBounds = true;
         //        self.profilePicture.layer.borderWidth = 3.0;
@@ -44,7 +47,7 @@ class ProfileViewController: UIViewController, UICollectionViewDataSource, UICol
         
         // construct query
         let query = PFQuery(className: "Post")
-        query.whereKey("author", equalTo: PFUser.currentUser()!)
+        query.whereKey("author", equalTo: currentUser!)
         
         // fetch data asynchronously
         query.findObjectsInBackgroundWithBlock { (posts: [PFObject]?, error: NSError?) -> Void in
@@ -56,16 +59,16 @@ class ProfileViewController: UIViewController, UICollectionViewDataSource, UICol
             }
         }
         
-        let currentProfilePic = PFUser.currentUser()!["profilePicture"]
+        let currentProfilePic = currentUser!["profilePicture"]
         
         var instagramPost: PFObject! {
             didSet {
-                self.profilePicture.file = PFUser.currentUser()!["profilePicture"] as? PFFile
+                self.profilePicture.file = currentUser!["profilePicture"] as? PFFile
                 self.profilePicture.loadInBackground()
             }
         }
-        instagramPost = PFUser.currentUser()
-
+        instagramPost = currentUser
+        
     }
     
     
@@ -77,7 +80,7 @@ class ProfileViewController: UIViewController, UICollectionViewDataSource, UICol
     func refreshControlAction(refreshControl: UIRefreshControl) {
         // construct query
         let query = PFQuery(className: "Post")
-        query.whereKey("author", equalTo: PFUser.currentUser()!)
+        query.whereKey("author", equalTo: currentUser!)
         
         // fetch data asynchronously
         query.findObjectsInBackgroundWithBlock { (posts: [PFObject]?, error: NSError?) -> Void in
@@ -112,41 +115,47 @@ class ProfileViewController: UIViewController, UICollectionViewDataSource, UICol
         
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if (segue.identifier == "profilePostDetailsSegue") {
-            var indexPath: NSIndexPath
-            let vc = segue.destinationViewController as! PostDetailsViewController
-            indexPath = collectionView.indexPathForCell(sender as! UICollectionViewCell)!
-            
-            let dateFormatter = NSDateFormatter()
-            dateFormatter.locale = NSLocale.currentLocale()
-            
-            let post = userPosts[indexPath.row]
-            //print(post)
-            vc.currentPost = post
-            let caption = post["caption"]
-            vc.captionText = caption as! String
-            let likesCount = post["likesCount"]
-            vc.likesText = likesCount.stringValue
-            let user = post["author"] as! PFUser
-            print (user)
-            //print (user.username)
-            //let username: String? = user.username
-            //print(username)
-//            let username = PFUser.currentUser()!.username
-//            print(username)
-//            print(username!)
-//            var username1 = username!
-            //vc.userLabel.text = username1
-            let timestamp = post.createdAt
-            dateFormatter.dateStyle = NSDateFormatterStyle.FullStyle
-            let convertedDate = dateFormatter.stringFromDate(timestamp!)
-            vc.timestampText = "Posted:\(convertedDate)"
-            
-            let oldImage = post["media"] as? PFFile
-            vc.image = oldImage
-        }
+    @IBAction func didTapDone(sender: AnyObject) {
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
+    
+//    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+//        if (segue.identifier == "profilePostDetailsSegue") {
+//            var indexPath: NSIndexPath
+//            let vc = segue.destinationViewController as! PostDetailsViewController
+//            indexPath = collectionView.indexPathForCell(sender as! UICollectionViewCell)!
+//            
+//            let dateFormatter = NSDateFormatter()
+//            dateFormatter.locale = NSLocale.currentLocale()
+//            
+//            let post = userPosts[indexPath.row]
+//            //print(post)
+//            vc.currentPost = post
+//            let caption = post["caption"]
+//            vc.captionText = caption as! String
+//            let likesCount = post["likesCount"]
+//            vc.likesText = likesCount.stringValue
+//            let user = post["author"] as! PFUser
+//            print (user)
+//            //print (user.username)
+//            //let username: String? = user.username
+//            //print(username)
+//            //            let username = PFUser.currentUser()!.username
+//            //            print(username)
+//            //            print(username!)
+//            //            var username1 = username!
+//            //vc.userLabel.text = username1
+//            let timestamp = post.createdAt
+//            dateFormatter.dateStyle = NSDateFormatterStyle.FullStyle
+//            let convertedDate = dateFormatter.stringFromDate(timestamp!)
+//            vc.timestampText = "Posted:\(convertedDate)"
+//            
+//            let oldImage = post["media"] as? PFFile
+//            vc.image = oldImage
+//        }
+//    }
+    
 }
+
 

@@ -42,9 +42,6 @@ class LoginViewController: UIViewController {
         
         PFUser.logInWithUsernameInBackground(username, password: password) { (user: PFUser?, error: NSError?) -> Void in
             if let error = error {
-//                if (error.code == 101) {
-//                    self.errorLabel.text = "Invalid username/password"
-//                }
                 self.errorLabel.text = error.localizedDescription
                 print("User login failed.")
                 print(error.localizedDescription)

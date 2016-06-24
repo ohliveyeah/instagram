@@ -42,22 +42,27 @@ class Post: NSObject {
         post.saveInBackgroundWithBlock(completion)
     }
     
-    class func postComment (comment: String?, forPost post: PFObject) {
+    class func postComment(comment: String?, forPost post: PFObject) {
         //let currentPost: Post = Post.init()
         let oldCommentsCount = post["commentsCount"]
         var newCommentsCount = (oldCommentsCount as? Int)
         newCommentsCount! += 1
         post.setObject(newCommentsCount!, forKey: "commentsCount")
         
-        let currentComment = Comment.init()
-        currentComment.comment = comment!
-        currentComment.userString = (PFUser.currentUser()?.username)!
-        let relation: PFRelation = post.relationForKey("arrayOfComments")
-        relation.addObject(currentComment)
-        post.saveInBackground()
+        let currentComment = PFObject(className: "Comment")
+        currentComment["text"] = comment
+        let username = PFUser.currentUser()?.username
+        currentComment["username"] = username
         
-        //let comments = getCommments()
-        //post["arrayOfComments"].append(currentComment)
+        currentComment["parent"] = post
+        
+        currentComment.saveInBackgroundWithBlock { (success: Bool, error: NSError?) in
+            if success {
+                print("Right on Right on!!!")
+            } else {
+                print(error?.localizedDescription)
+            }
+        }
     }
     
     /**
@@ -77,5 +82,5 @@ class Post: NSObject {
         }
         return nil
     }
-
+    
 }

@@ -13,4 +13,9 @@ import ParseUI
 class Comment: PFObject {
     var userString = ""
     var comment = ""
+    
+//    override init() {
+//        super.init()
+//        
+//    }
 }
