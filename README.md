@@ -35,6 +35,7 @@ The following **additional** features are implemented:
 
 - [x] Allow user to apply filter to images
 - [x] Allow the user to go to details view on their own page
+- [x] Uses section headers to get "sticky headers" effect
 
 Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
 
