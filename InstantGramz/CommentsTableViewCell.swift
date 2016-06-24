@@ -12,6 +12,8 @@ class CommentsTableViewCell: UITableViewCell {
 
     @IBOutlet weak var commentLabel: UILabel!
     @IBOutlet weak var userLabel: UILabel!
+    @IBOutlet weak var timestampLabel: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

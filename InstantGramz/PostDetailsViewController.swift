@@ -21,7 +21,7 @@ class PostDetailsViewController: UIViewController,  UITableViewDataSource, UITab
     @IBOutlet weak var commentButton: UIButton!
     @IBOutlet weak var commentsTableView: UITableView!
     @IBOutlet weak var likesLabel: UILabel!
-    
+    @IBOutlet weak var profilePicture: PFImageView!
     
     var captionText = ""
     var userText = ""
@@ -30,6 +30,7 @@ class PostDetailsViewController: UIViewController,  UITableViewDataSource, UITab
     var currentPost: PFObject?
     var commentButtonCounter = 0
     var comments: [PFObject] = []
+    var postUser: PFObject?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,6 +68,18 @@ class PostDetailsViewController: UIViewController,  UITableViewDataSource, UITab
             }
             self.commentsTableView.reloadData()
         }
+        if let postUser = postUser {
+            let currentProfilePic = postUser["profilePicture"]
+            print(currentProfilePic)
+        }
+        var instagramPost: PFObject! {
+            didSet {
+                self.profilePicture.file = postUser!["profilePicture"] as? PFFile
+                print(self.profilePicture.file)
+                self.profilePicture.loadInBackground()
+            }
+        }
+        //instagramPost = currentProfilePic
 
     }
 
@@ -102,6 +115,27 @@ class PostDetailsViewController: UIViewController,  UITableViewDataSource, UITab
         let comment = comments[indexPath.row]
         cell.commentLabel.text = (comment["text"] as! String)
         cell.userLabel.text = (comment["username"] as! String)
+        
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.locale = NSLocale.currentLocale()
+        
+        let timestamp = comment.createdAt
+        dateFormatter.dateStyle = NSDateFormatterStyle.FullStyle
+        let convertedDate = timestamp?.timeIntervalSinceNow
+        let newDate = convertedDate! * -1
+        var finalDate = Int(newDate)
+        if finalDate > 3600 {
+            finalDate = finalDate / 3600
+            cell.timestampLabel.text = "\(finalDate) hours ago"
+        }
+        else if finalDate > 60 {
+            finalDate = finalDate / 60
+            cell.timestampLabel.text = "\(finalDate) minutes ago"
+        }
+        else {
+            cell.timestampLabel.text = "\(finalDate) seconds ago"
+        }
+
         return (cell)
     }
     

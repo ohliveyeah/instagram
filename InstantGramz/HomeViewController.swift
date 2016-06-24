@@ -248,17 +248,34 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
             let caption = post["caption"]
             vc.captionText = caption as! String
             let user = post["author"]
+            vc.postUser = user as! PFObject
             let username = user.username
-            vc.userText = username!!
+            vc.userText = "\(username!!)'s Post"
             let likes = post["likesCount"]
             vc.likesText = likes.stringValue
+            
+            
+            
             let timestamp = post.createdAt
             dateFormatter.dateStyle = NSDateFormatterStyle.FullStyle
-            let convertedDate = dateFormatter.stringFromDate(timestamp!)
-            vc.timestampText = "Posted:\(convertedDate)"
+            let convertedDate = timestamp?.timeIntervalSinceNow
+            let newDate = convertedDate! * -1
+            var finalDate = Int(newDate)
+            if finalDate > 3600 {
+                finalDate = finalDate / 3600
+                vc.timestampText = "Posted:\(finalDate) hours ago"
+            }
+            else if finalDate > 60 {
+                finalDate = finalDate / 60
+                vc.timestampText = "Posted:\(finalDate) minutes ago"
+            }
+            else {
+                vc.timestampText = "Posted:\(finalDate) seconds ago"
+            }
             
             let oldImage = post["media"] as? PFFile
             vc.image = oldImage
+        
         }
     }
     

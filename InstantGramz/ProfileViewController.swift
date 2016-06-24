@@ -17,6 +17,7 @@ class ProfileViewController: UIViewController, UICollectionViewDataSource, UICol
     @IBOutlet weak var profilePicture: PFImageView!
     @IBOutlet weak var bioLabel: UILabel!
     @IBOutlet weak var postsLabel: UILabel!
+    @IBOutlet weak var taggedCollectionView: UICollectionView!
     
     var isMoreDataLoading = false
     var userPosts: [PFObject] = []
@@ -31,6 +32,9 @@ class ProfileViewController: UIViewController, UICollectionViewDataSource, UICol
         } else {
             bioLabel.text = ""
         }
+        
+        taggedCollectionView.dataSource = self
+        taggedCollectionView.delegate = self
         
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -196,10 +200,27 @@ class ProfileViewController: UIViewController, UICollectionViewDataSource, UICol
             vc.captionText = caption as! String
             let likesCount = post["likesCount"]
             vc.likesText = likesCount.stringValue
+            
             let timestamp = post.createdAt
             dateFormatter.dateStyle = NSDateFormatterStyle.FullStyle
-            let convertedDate = dateFormatter.stringFromDate(timestamp!)
-            vc.timestampText = "Posted:\(convertedDate)"
+            let convertedDate = timestamp?.timeIntervalSinceNow
+            let newDate = convertedDate! * -1
+            var finalDate = Int(newDate)
+            if finalDate > 3600 {
+                print(finalDate)
+                finalDate = finalDate / 3600
+                vc.timestampText = "Posted:\(finalDate) hours ago"
+            }
+            else if finalDate > 60 {
+                print(finalDate)
+                finalDate = finalDate / 60
+                vc.timestampText = "Posted:\(finalDate) minutes ago"
+            }
+            else {
+                print(finalDate)
+                vc.timestampText = "Posted:\(finalDate) seconds ago"
+            }
+
             
             let oldImage = post["media"] as? PFFile
             vc.image = oldImage

@@ -24,7 +24,7 @@ class Post: NSObject {
      */
     
     
-    class func postUserImage(image: UIImage?, withCaption caption: String?, withCompletion completion: PFBooleanResultBlock?) {
+    class func postUserImage(image: UIImage?, withCaption caption: String?, withUser taggedUser: PFObject?, withCompletion completion: PFBooleanResultBlock?) {
         // Create Parse object PFObject
         let post = PFObject(className: "Post")
         
@@ -34,6 +34,13 @@ class Post: NSObject {
         post["caption"] = caption
         post["likesCount"] = 0
         post["commentsCount"] = 0
+        if let taggedUser = taggedUser {
+            print("success")
+            post["taggedUser"] = taggedUser
+        } else {
+            print("error")
+            post["taggedUser"] = PFUser.currentUser()
+        }
         
         post["arrayOfComments"] = []
      

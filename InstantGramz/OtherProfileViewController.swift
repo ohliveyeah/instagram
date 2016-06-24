@@ -39,10 +39,6 @@ class OtherProfileViewController: UIViewController, UICollectionViewDataSource, 
         self.profilePicture.layer.cornerRadius = 30
         self.profilePicture.layer.masksToBounds = true
         
-        //        self.profilePicture.clipsToBounds = true;
-        //        self.profilePicture.layer.borderWidth = 3.0;
-        //        self.profilePicture.layer.borderColor = UIColor.whiteColor().CGColor
-        
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refreshControlAction(_:)), forControlEvents: UIControlEvents.ValueChanged)
         collectionView.insertSubview(refreshControl, atIndex: 0)

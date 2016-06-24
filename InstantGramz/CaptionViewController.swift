@@ -18,7 +18,7 @@ class CaptionViewController: UIViewController {
     @IBOutlet weak var captionField: UITextField!
     @IBOutlet weak var filterChoice: UISegmentedControl!
     @IBOutlet weak var intensitySlider: UISlider!
-    
+    @IBOutlet weak var tagField: UITextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,6 +26,8 @@ class CaptionViewController: UIViewController {
         imageView.image = image
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(CaptionViewController.dismissKeyboard))
         view.addGestureRecognizer(tap)
+        
+        
         
 //        UIImage *aUIImage = showPickedImageView.image;
 //        CGImageRef aCGImage = aUIImage.CGImage;
@@ -68,7 +70,23 @@ class CaptionViewController: UIViewController {
             caption = ""
         }
         let currentImage = imageView.image
-        Post.postUserImage(currentImage!, withCaption: caption!, withCompletion: nil)
+        let taggedUsername = tagField.text
+        var taggedUser: PFObject?
+        
+        let query = PFQuery(className: "_User")
+        query.orderByDescending("createdAt")
+        query.whereKey("username", equalTo: taggedUsername!)
+        print(taggedUsername!)
+        print("query")
+        
+        query.findObjectsInBackgroundWithBlock { (users: [PFObject]?, error: NSError?) -> Void in
+            if let users = users {
+                taggedUser = users[0]
+                print(taggedUser)
+            }
+            Post.postUserImage(currentImage!, withCaption: caption!, withUser: taggedUser, withCompletion: nil)
+        }
+      
         MBProgressHUD.hideHUDForView(self.view, animated: true)
         print("posted")
         //self.dismissViewControllerAnimated(true, completion: nil)
