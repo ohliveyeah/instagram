@@ -18,7 +18,9 @@ class FeedPostTableViewCell: UITableViewCell {
     @IBOutlet weak var commentsLabel: UILabel!
     @IBOutlet weak var captionLabel: UILabel!
     @IBOutlet weak var profilePicture: PFImageView!
-    
+    @IBOutlet weak var whiteHeart: UIImageView!
+    @IBOutlet weak var unlikeButton: UIButton!
+    @IBOutlet weak var likeButton: UIButton!
     override func awakeFromNib() {
         super.awakeFromNib()
         

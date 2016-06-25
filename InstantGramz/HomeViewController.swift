@@ -79,32 +79,38 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
     }
     
-    @IBAction func didTapLike(sender: AnyObject) {
-        likeNumber += 1
-        if (likeNumber % 2 == 1) {
-            let buttonPosition: CGPoint = sender.convertPoint(CGPointZero, toView: self.tableView)
-            let indexPath = self.tableView.indexPathForRowAtPoint(buttonPosition)
-            if (indexPath != nil) {
-                let post = self.userPosts[indexPath!.section]
-                let oldLikesCount = post["likesCount"]
-                var newLikesCount = (oldLikesCount as? Int)
-                newLikesCount! += 1
-                //post.setValue(newLikesCount, forKeyPath: "likesCount")
-                post.setObject(newLikesCount!, forKey: "likesCount")
-                post.saveInBackground()
-            }
+    
+    @IBAction func didTapUnlike(sender: AnyObject) {
+        let buttonPosition: CGPoint = sender.convertPoint(CGPointZero, toView: self.tableView)
+        let indexPath = self.tableView.indexPathForRowAtPoint(buttonPosition)
+        let cell = self.tableView.cellForRowAtIndexPath(indexPath!) as! FeedPostTableViewCell
+        cell.likeButton.hidden = true
+        cell.whiteHeart.hidden = true
+        if (indexPath != nil) {
+            let post = self.userPosts[indexPath!.section]
+            let oldLikesCount = post["likesCount"]
+            var newLikesCount = (oldLikesCount as? Int)
+            newLikesCount! += 1
+            //post.setValue(newLikesCount, forKeyPath: "likesCount")
+            post.setObject(newLikesCount!, forKey: "likesCount")
+            post.saveInBackground()
         }
-        else {
-            let buttonPosition: CGPoint = sender.convertPoint(CGPointZero, toView: self.tableView)
-            let indexPath = self.tableView.indexPathForRowAtPoint(buttonPosition)
-            if (indexPath != nil) {
-                let post = self.userPosts[indexPath!.section]
-                let oldLikesCount = post["likesCount"]
-                var newLikesCount = (oldLikesCount as? Int)
-                newLikesCount! -= 1
-                post.setObject(newLikesCount!, forKey: "likesCount")
-                post.saveInBackground()
-            }
+    }
+    
+    @IBAction func didTapLike(sender: AnyObject) {
+        let buttonPosition: CGPoint = sender.convertPoint(CGPointZero, toView: self.tableView)
+        let indexPath = self.tableView.indexPathForRowAtPoint(buttonPosition)
+        let cell = self.tableView.cellForRowAtIndexPath(indexPath!) as! FeedPostTableViewCell
+        cell.likeButton.hidden = false
+        cell.whiteHeart.hidden = false
+        
+        if (indexPath != nil) {
+            let post = self.userPosts[indexPath!.section]
+            let oldLikesCount = post["likesCount"]
+            var newLikesCount = (oldLikesCount as? Int)
+            newLikesCount! -= 1
+            post.setObject(newLikesCount!, forKey: "likesCount")
+            post.saveInBackground()
         }
     }
     
@@ -120,6 +126,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("PostCell", forIndexPath: indexPath) as! FeedPostTableViewCell
+        
         let image = userPosts[indexPath.section]
         let caption = image["caption"]
         let user = image["author"]
@@ -248,13 +255,27 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
             let caption = post["caption"]
             vc.captionText = caption as! String
             let user = post["author"]
-            vc.postUser = user as! PFObject
+            vc.postUser = (user as! PFObject)
             let username = user.username
+            //print(username!!)
             vc.userText = "\(username!!)'s Post"
             let likes = post["likesCount"]
             vc.likesText = likes.stringValue
             
+//            let taggedUser = post["taggedUser"] as? PFObject
+//            
+//            if let taggedUser = taggedUser {
+//                //print(taggedUser)
+//                let user = taggedUser as! PFUser
+//                vc.taggedUser = user
+//                //let taggedUsername = user.username
+//                //let taggedUsername = taggedUser as! PFUser["username"]
+//                //print(taggedUsername)
+//                //vc.tagsText = taggedUsername! as String
+//            }
             
+            let taggedUsername = post["taggedUsername"] as? String
+            vc.tagsText = taggedUsername!
             
             let timestamp = post.createdAt
             dateFormatter.dateStyle = NSDateFormatterStyle.FullStyle

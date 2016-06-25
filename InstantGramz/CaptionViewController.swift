@@ -19,6 +19,8 @@ class CaptionViewController: UIViewController {
     @IBOutlet weak var filterChoice: UISegmentedControl!
     @IBOutlet weak var intensitySlider: UISlider!
     @IBOutlet weak var tagField: UITextField!
+    @IBOutlet weak var effectField: UISegmentedControl!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -84,7 +86,7 @@ class CaptionViewController: UIViewController {
                 taggedUser = users[0]
                 print(taggedUser)
             }
-            Post.postUserImage(currentImage!, withCaption: caption!, withUser: taggedUser, withCompletion: nil)
+            Post.postUserImage(currentImage!, withCaption: caption!, withUsername: taggedUsername!, withUser: taggedUser, withCompletion: nil)
         }
       
         MBProgressHUD.hideHUDForView(self.view, animated: true)
@@ -125,22 +127,22 @@ class CaptionViewController: UIViewController {
         }
         
         if (filterChoice.selectedSegmentIndex == 2) {
-            let vignette = CIFilter(name:"CIVignette")
-            vignette!.setValue(coreImage, forKey:kCIInputImageKey)
-            vignette!.setValue(2, forKey:"inputIntensity")
-            vignette!.setValue(500, forKey:"inputRadius")
-            
-            if let output = vignette!.valueForKey(kCIOutputImageKey) as? CIImage {
-                //convert to CG Image
-                let context = CIContext(options: nil)
-                let filteredImg = context.createCGImage(output, fromRect: output.extent)
-                //convert back to UI Image
-                let filteredImage = UIImage(CGImage: filteredImg)
-                imageView?.image = filteredImage
-            }
-            else {
-                print("image filtering failed")
-            }
+//            let vignette = CIFilter(name:"CIVignette")
+//            vignette!.setValue(coreImage, forKey:kCIInputImageKey)
+//            vignette!.setValue(2, forKey:"inputIntensity")
+//            vignette!.setValue(500, forKey:"inputRadius")
+//            
+//            if let output = vignette!.valueForKey(kCIOutputImageKey) as? CIImage {
+//                //convert to CG Image
+//                let context = CIContext(options: nil)
+//                let filteredImg = context.createCGImage(output, fromRect: output.extent)
+//                //convert back to UI Image
+//                let filteredImage = UIImage(CGImage: filteredImg)
+//                imageView?.image = filteredImage
+//            }
+//            else {
+//                print("image filtering failed")
+//            }
             
         }
         
@@ -164,6 +166,80 @@ class CaptionViewController: UIViewController {
             
         }
 
+
+    }
+    
+    
+    @IBAction func didChooseEffect(sender: AnyObject) {
+        print("valueChanged")
+        let currentImage = imageView.image
+        let cgimg = currentImage!.CGImage
+        let coreImage = CIImage(CGImage: cgimg!)
+        
+        if (effectField.selectedSegmentIndex == 0) {
+            imageView.image = currentImage
+        }
+        
+        if (effectField.selectedSegmentIndex == 1) {
+            print("1")
+            let vignette = CIFilter(name:"CIVignette")
+            vignette!.setValue(coreImage, forKey:kCIInputImageKey)
+            vignette!.setValue(2, forKey:"inputIntensity")
+            vignette!.setValue(500, forKey:"inputRadius")
+            
+            if let output = vignette!.valueForKey(kCIOutputImageKey) as? CIImage {
+                //convert to CG Image
+                let context = CIContext(options: nil)
+                let filteredImg = context.createCGImage(output, fromRect: output.extent)
+                //convert back to UI Image
+                let filteredImage = UIImage(CGImage: filteredImg)
+                imageView?.image = filteredImage
+            }
+            else {
+                print("image filtering failed")
+            }
+            
+        }
+        if (effectField.selectedSegmentIndex == 2) {
+            print("2")
+            let filter = CIFilter (name:"CIDotScreen")
+            filter!.setValue(coreImage, forKey: kCIInputImageKey)
+            filter!.setValue(25, forKey: "inputWidth")
+            filter!.setValue(0, forKey: "inputAngle")
+            filter!.setValue(0.7, forKey: "inputSharpness")
+            
+            if let output = filter!.valueForKey(kCIOutputImageKey) as? CIImage {
+                //convert to CG Image
+                let context = CIContext(options: nil)
+                let filteredImg = context.createCGImage(output, fromRect: output.extent)
+                //convert back to UI Image
+                let filteredImage = UIImage(CGImage: filteredImg)
+                imageView?.image = filteredImage
+            }
+            else {
+                print("image filtering failed")
+            }
+
+
+        }
+        if (effectField.selectedSegmentIndex == 3) {
+            print("3")
+            let filter = CIFilter (name:"CIGaussianBlur")
+            filter!.setValue(coreImage, forKey:kCIInputImageKey)
+            filter!.setValue(15, forKey: "inputRadius")
+            
+            if let output = filter!.valueForKey(kCIOutputImageKey) as? CIImage {
+                //convert to CG Image
+                let context = CIContext(options: nil)
+                let filteredImg = context.createCGImage(output, fromRect: output.extent)
+                //convert back to UI Image
+                let filteredImage = UIImage(CGImage: filteredImg)
+                imageView?.image = filteredImage
+            }
+            else {
+                print("image filtering failed")
+            }
+        }
 
     }
     

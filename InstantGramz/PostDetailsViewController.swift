@@ -22,15 +22,18 @@ class PostDetailsViewController: UIViewController,  UITableViewDataSource, UITab
     @IBOutlet weak var commentsTableView: UITableView!
     @IBOutlet weak var likesLabel: UILabel!
     @IBOutlet weak var profilePicture: PFImageView!
+    @IBOutlet weak var tagsLabel: UILabel!
     
     var captionText = ""
     var userText = ""
     var timestampText = ""
     var likesText = ""
+    var tagsText = ""
     var currentPost: PFObject?
     var commentButtonCounter = 0
     var comments: [PFObject] = []
     var postUser: PFObject?
+    var taggedUser: PFObject?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,6 +47,7 @@ class PostDetailsViewController: UIViewController,  UITableViewDataSource, UITab
         imageView.file = image
         imageView.loadInBackground()
         timestampLabel.text = timestampText
+        tagsLabel.text = "With \(tagsText)"
         commentField.hidden = true
         
         NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: #selector(PostDetailsViewController.onTimer), userInfo: nil, repeats: true)
@@ -66,7 +70,7 @@ class PostDetailsViewController: UIViewController,  UITableViewDataSource, UITab
             } else {
                 print(error?.localizedDescription)
             }
-            self.commentsTableView.reloadData()
+                self.commentsTableView.reloadData()
         }
         if let postUser = postUser {
             let currentProfilePic = postUser["profilePicture"]
@@ -79,8 +83,11 @@ class PostDetailsViewController: UIViewController,  UITableViewDataSource, UITab
                 self.profilePicture.loadInBackground()
             }
         }
+//        let taggedUsername = taggedUser!["username"]
+//        tagsText = taggedUsername as! String
+//        tagsLabel.text = tagsText
+        
         //instagramPost = currentProfilePic
-
     }
 
     override func didReceiveMemoryWarning() {

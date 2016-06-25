@@ -18,12 +18,17 @@ class ProfileViewController: UIViewController, UICollectionViewDataSource, UICol
     @IBOutlet weak var bioLabel: UILabel!
     @IBOutlet weak var postsLabel: UILabel!
     @IBOutlet weak var taggedCollectionView: UICollectionView!
+    @IBOutlet weak var myPostsButton: UIButton!
+    @IBOutlet weak var tagsButton: UIButton!
     
     var isMoreDataLoading = false
+    var taggedPost: [PFObject] = []
     var userPosts: [PFObject] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        myPostsButton.hidden = true
+        
         let currentUser = PFUser.currentUser()!.username
         userLabel.text = "\(currentUser!)'s Gramz"
         var bio = PFUser.currentUser()!["bio"]
@@ -35,9 +40,12 @@ class ProfileViewController: UIViewController, UICollectionViewDataSource, UICol
         
         taggedCollectionView.dataSource = self
         taggedCollectionView.delegate = self
+        taggedCollectionView.hidden = true
         
         collectionView.dataSource = self
         collectionView.delegate = self
+
+        
         //
         //        NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: #selector(ProfileViewController.onTimer), userInfo: nil, repeats: true)
         
@@ -61,9 +69,22 @@ class ProfileViewController: UIViewController, UICollectionViewDataSource, UICol
             } else {
                 print(error?.localizedDescription)
             }
+            // construct query
+            let secondQuery = PFQuery(className: "Post")
+            secondQuery.includeKey("taggedUser")
+            secondQuery.whereKey("taggedUser", equalTo: PFUser.currentUser()!)
+            
+            // fetch data asynchronously
+            secondQuery.findObjectsInBackgroundWithBlock { (secondPosts: [PFObject]?, error: NSError?) -> Void in
+                if let secondPosts = secondPosts {
+                    self.taggedPost = secondPosts
+                    self.taggedCollectionView.reloadData()
+                } else {
+                    print(error?.localizedDescription)
+                }
+            }
+
         }
-        
-        //postsLabel.text = "\(self.userPosts.count) Posts"
         
         let currentProfilePic = PFUser.currentUser()!["profilePicture"]
         
@@ -75,6 +96,26 @@ class ProfileViewController: UIViewController, UICollectionViewDataSource, UICol
         }
         instagramPost = PFUser.currentUser()
     }
+    
+    @IBAction func didTapTags(sender: AnyObject) {
+        collectionView.hidden = true
+        taggedCollectionView.hidden = false
+        tagsButton.hidden = true
+        myPostsButton.hidden = false
+        
+        postsLabel.text = "\(taggedPost.count) Posts"
+    }
+    
+    
+    @IBAction func didTapMyPosts(sender: AnyObject) {
+        collectionView.hidden = false
+        taggedCollectionView.hidden = true
+        tagsButton.hidden = false
+        myPostsButton.hidden = true
+        
+        postsLabel.text = "\(userPosts.count)"
+    }
+    
     
     override func viewDidDisappear(animated: Bool) {
         var bio = PFUser.currentUser()!["bio"]
@@ -131,21 +172,41 @@ class ProfileViewController: UIViewController, UICollectionViewDataSource, UICol
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return userPosts.count
+        if (collectionView.restorationIdentifier == "Posts Collection View") {
+            return userPosts.count
+        }
+        else {
+            return taggedPost.count
+        }
     }
     
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("ProfilePostCell", forIndexPath: indexPath) as! ProfileCollectionViewCell
-        
-        let post = userPosts[indexPath.row]
-        cell.profileImageView.file = post["media"] as? PFFile
-        cell.profileImageView.loadInBackground()
-        
-        cell.likeLabel.text = post["likesCount"].stringValue
-        cell.commentsLabel.text = post["commentsCount"].stringValue
-        
-        return cell
+        if (collectionView.restorationIdentifier == "Posts Collection View") {
+            let cell = collectionView.dequeueReusableCellWithReuseIdentifier("ProfilePostCell", forIndexPath: indexPath) as! ProfileCollectionViewCell
+            
+            let post = userPosts[indexPath.row]
+            cell.profileImageView.file = post["media"] as? PFFile
+            cell.profileImageView.loadInBackground()
+            
+            cell.likeLabel.text = post["likesCount"].stringValue
+            cell.commentsLabel.text = post["commentsCount"].stringValue
+            
+            return cell
+        }
+        else {
+            let cell = taggedCollectionView.dequeueReusableCellWithReuseIdentifier("ProfilePostCell", forIndexPath: indexPath) as! ProfileCollectionViewCell
+            
+            let post = taggedPost[indexPath.row]
+            cell.profileImageView.file = post["media"] as? PFFile
+            cell.profileImageView.loadInBackground()
+            
+            cell.likeLabel.text = post["likesCount"].stringValue
+            cell.commentsLabel.text = post["commentsCount"].stringValue
+            
+            return cell
+
+        }
         
     }
     
