@@ -1,8 +1,8 @@
-# Project 3 - *Name of App Here*
+# Project 3 - InstantGramz
 
-**Name of your app** is a photo sharing app using Parse as its backend.
+InstantGramz is a photo sharing app using Parse as its backend.
 
-Time spent: **X** hours spent in total
+Time spent: 30 hours spent in total
 
 ## User Stories
 
@@ -33,20 +33,32 @@ The following **optional** features are implemented:
 
 The following **additional** features are implemented:
 
-- [x] Allow user to apply filter to images
+- [x] Allow user to apply filters and effects to images
 - [x] Allow the user to go to details view on their own page
 - [x] Uses section headers to get "sticky headers" effect
+- [x] Users can tag other users in photos, so the other's users name shows up in the photo's detail view, and the photo also shows up on the second user's profile
+- [x] Users can search for other users
+- [x] Users can unlike pictures
+- [x] Users can write bios
+- [x] Updating UI, adding more info (such as updated timestamps and number of posts per user)
 
 Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
 
-1.
-2.
+1. AutoLayout!
+2. Referencing parse objects
 
 ## Video Walkthrough
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://s32.postimg.org/ycdd62k2d/gram1.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://s31.postimg.org/9a59piqu3/gram2.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://s32.postimg.org/4omkwhkdx/gram3.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://s32.postimg.org/a6minhb1h/gram4.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://s32.postimg.org/5rdp5ks5h/gram5.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://s31.postimg.org/8uiig4qaz/gram6.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://s32.postimg.org/q26ppo7hx/gram7.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
