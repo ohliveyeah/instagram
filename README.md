@@ -34,6 +34,7 @@ The following **optional** features are implemented:
 The following **additional** features are implemented:
 
 - [x] Allow user to apply filters and effects to images
+- [x] Error message during login/signup page
 - [x] Allow the user to go to details view on their own page
 - [x] Uses section headers to get "sticky headers" effect
 - [x] Users can tag other users in photos, so the other's users name shows up in the photo's detail view, and the photo also shows up on the second user's profile
